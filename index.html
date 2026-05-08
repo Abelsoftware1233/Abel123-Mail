@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NEXUS — Email Bot Command Center</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- Scanline overlay -->
+  <div class="scanlines"></div>
+  <div class="grid-overlay"></div>
+
+  <!-- Top binary bar -->
+  <div class="binary-bar">
+    <span id="binaryStream"></span>
+  </div>
+
+  <!-- HEADER -->
+  <header class="hud-header">
+    <div class="header-left">
+      <div class="dna-icon">
+        <div class="dna-strand"></div>
+      </div>
+      <div class="brand">
+        <span class="brand-tag">[SYS_INIT]</span>
+        <h1>NEXUS<span class="accent">_</span>MAILER</h1>
+        <span class="brand-sub">BULK EMAIL COMMAND CENTER v3.7.1</span>
+      </div>
+    </div>
+    <div class="header-center">
+      <div class="globe-container">
+        <div class="globe-ring ring-top">
+          <div class="ring-inner"></div>
+        </div>
+        <div class="globe">
+          <div class="globe-dots"></div>
+          <div class="globe-meridian m1"></div>
+          <div class="globe-meridian m2"></div>
+          <div class="globe-meridian m3"></div>
+          <div class="globe-equator"></div>
+          <div class="globe-glow"></div>
+          <div class="pulse-ring pr1"></div>
+          <div class="pulse-ring pr2"></div>
+          <div class="pulse-ring pr3"></div>
+        </div>
+        <div class="globe-ring ring-bottom">
+          <div class="ring-inner"></div>
+        </div>
+        <div class="globe-label">GLOBAL NETWORK ONLINE</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="status-indicators">
+        <div class="status-item">
+          <div class="status-dot active"></div>
+          <span>SMTP CONNECTED</span>
+        </div>
+        <div class="status-item">
+          <div class="status-dot active"></div>
+          <span>QUEUE ACTIVE</span>
+        </div>
+        <div class="status-item">
+          <div class="status-dot warning"></div>
+          <span>RATE LIMIT: 87%</span>
+        </div>
+      </div>
+      <div class="system-time" id="systemTime"></div>
+    </div>
+  </header>
+
+  <!-- MAIN DASHBOARD -->
+  <main class="dashboard">
+
+    <!-- LEFT PANEL -->
+    <aside class="panel panel-left">
+
+      <!-- Stats circles (like in image) -->
+      <div class="hud-section">
+        <div class="section-title"><span class="bracket">[</span>TRANSMISSION STATS<span class="bracket">]</span></div>
+        <div class="stat-circles">
+          <div class="stat-circle-item">
+            <div class="circle-gauge" data-pct="55">
+              <svg viewBox="0 0 80 80">
+                <circle class="track" cx="40" cy="40" r="32"/>
+                <circle class="fill" cx="40" cy="40" r="32" style="--pct:55"/>
+              </svg>
+              <span class="pct-label">55%</span>
+            </div>
+            <div class="stat-detail">
+              <span class="stat-name">DELIVERED</span>
+              <span class="stat-val" id="statDelivered">0</span>
+            </div>
+          </div>
+          <div class="stat-circle-item">
+            <div class="circle-gauge" data-pct="90">
+              <svg viewBox="0 0 80 80">
+                <circle class="track" cx="40" cy="40" r="32"/>
+                <circle class="fill" cx="40" cy="40" r="32" style="--pct:90"/>
+              </svg>
+              <span class="pct-label">90%</span>
+            </div>
+            <div class="stat-detail">
+              <span class="stat-name">OPEN RATE</span>
+              <span class="stat-val" id="statOpen">0</span>
+            </div>
+          </div>
+          <div class="stat-circle-item">
+            <div class="circle-gauge" data-pct="80">
+              <svg viewBox="0 0 80 80">
+                <circle class="track" cx="40" cy="40" r="32"/>
+                <circle class="fill" cx="40" cy="40" r="32" style="--pct:80"/>
+              </svg>
+              <span class="pct-label">80%</span>
+            </div>
+            <div class="stat-detail">
+              <span class="stat-name">SUCCESS</span>
+              <span class="stat-val" id="statSuccess">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bar chart -->
+      <div class="hud-section">
+        <div class="section-title"><span class="bracket">[</span>SEND VELOCITY<span class="bracket">]</span></div>
+        <div class="bar-chart" id="barChart">
+          <div class="bar-chart-y">
+            <span>2.0797</span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="bars" id="barsContainer"></div>
+        </div>
+      </div>
+
+      <!-- Block stats -->
+      <div class="hud-section">
+        <div class="section-title"><span class="bracket">[</span>QUEUE STATUS<span class="bracket">]</span></div>
+        <div class="block-stats" id="blockStats">
+          <div class="block-row">
+            <div class="block-fill" style="width:80%"></div>
+            <span>IN QUEUE</span><span class="block-val" id="queueCount">0</span>
+          </div>
+          <div class="block-row">
+            <div class="block-fill" style="width:55%"></div>
+            <span>SENDING</span><span class="block-val" id="sendingCount">0</span>
+          </div>
+          <div class="block-row">
+            <div class="block-fill" style="width:90%"></div>
+            <span>DONE</span><span class="block-val" id="doneCount">0</span>
+          </div>
+          <div class="block-row">
+            <div class="block-fill err" style="width:20%"></div>
+            <span>FAILED</span><span class="block-val" id="failedCount">0</span>
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+    <!-- CENTER PANEL -->
+    <section class="panel panel-center">
+
+      <!-- SMTP Config -->
+      <div class="hud-section">
+        <div class="section-title"><span class="bracket">[</span>SMTP CONFIGURATION<span class="bracket">]</span></div>
+        <div class="form-grid two-col">
+          <div class="field-group">
+            <label>SMTP HOST</label>
+            <input type="text" id="smtpHost" placeholder="smtp.gmail.com" />
+          </div>
+          <div class="field-group">
+            <label>PORT</label>
+            <input type="number" id="smtpPort" placeholder="587" value="587" />
+          </div>
+          <div class="field-group">
+            <label>USERNAME</label>
+            <input type="text" id="smtpUser" placeholder="user@domain.com" />
+          </div>
+          <div class="field-group">
+            <label>PASSWORD</label>
+            <input type="password" id="smtpPass" placeholder="••••••••••••" />
+          </div>
+          <div class="field-group">
+            <label>FROM NAME</label>
+            <input type="text" id="fromName" placeholder="Nexus Mailer" />
+          </div>
+          <div class="field-group">
+            <label>FROM EMAIL</label>
+            <input type="text" id="fromEmail" placeholder="noreply@domain.com" />
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="hud-btn secondary" onclick="testConnection()">⬡ TEST CONNECTION</button>
+          <div class="connection-result" id="connectionResult"></div>
+        </div>
+      </div>
+
+      <!-- Campaign Setup -->
+      <div class="hud-section">
+        <div class="section-title"><span class="bracket">[</span>CAMPAIGN PAYLOAD<span class="bracket">]</span></div>
+        <div class="form-grid one-col">
+          <div class="field-group">
+            <label>SUBJECT LINE</label>
+            <input type="text" id="subject" placeholder="Your subject with {name} variable support" />
+          </div>
+          <div class="field-group">
+            <label>EMAIL BODY (HTML supported | use {name}, {email} as variables)</label>
+            <textarea id="emailBody" rows="6" placeholder="&lt;h1&gt;Hello {name}&lt;/h1&gt;&#10;&lt;p&gt;Your message here...&lt;/p&gt;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recipients -->
+      <div class="hud-section">
+        <div class="section-title"><span class="bracket">[</span>RECIPIENT LIST<span class="bracket">]</span></div>
+        <div class="recipient-tools">
+          <div class="field-group" style="flex:1">
+            <label>PASTE EMAILS (one per line, or: name,email format)</label>
+            <textarea id="recipients" rows="5" placeholder="john@example.com&#10;Jane Doe,jane@example.com&#10;mike@example.com"></textarea>
+          </div>
+          <div class="upload-zone" onclick="document.getElementById('csvFile').click()">
+            <input type="file" id="csvFile" accept=".csv,.txt" style="display:none" onchange="loadCSV(event)"/>
+            <div class="upload-icon">⬆</div>
+            <div>DROP CSV</div>
+            <div class="upload-sub">or click to browse</div>
+          </div>
+        </div>
+        <div class="recipient-count">
+          <span>RECIPIENTS LOADED:</span>
+          <span class="count-val" id="recipientCount">0</span>
+          <button class="hud-btn micro" onclick="parseRecipients()">PARSE</button>
+          <button class="hud-btn micro err" onclick="clearRecipients()">CLEAR</button>
+        </div>
+      </div>
+
+      <!-- Send Settings -->
+      <div class="hud-section">
+        <div class="section-title"><span class="bracket">[</span>TRANSMISSION PARAMETERS<span class="bracket">]</span></div>
+        <div class="form-grid three-col">
+          <div class="field-group">
+            <label>BATCH SIZE</label>
+            <input type="number" id="batchSize" value="50" min="1" max="500"/>
+          </div>
+          <div class="field-group">
+            <label>DELAY (ms)</label>
+            <input type="number" id="delay" value="200" min="0"/>
+          </div>
+          <div class="field-group">
+            <label>MAX RETRIES</label>
+            <input type="number" id="maxRetries" value="3" min="0" max="10"/>
+          </div>
+        </div>
+        <div class="btn-row">
+          <button class="hud-btn primary" onclick="startCampaign()" id="startBtn">⬡ INITIATE TRANSMISSION</button>
+          <button class="hud-btn danger" onclick="stopCampaign()" id="stopBtn" disabled>⬢ ABORT</button>
+          <button class="hud-btn secondary" onclick="exportLog()">⬡ EXPORT LOG</button>
+        </div>
+      </div>
+
+      <!-- Progress bar -->
+      <div class="hud-section">
+        <div class="section-title"><span class="bracket">[</span>TRANSMISSION PROGRESS<span class="bracket">]</span></div>
+        <div class="progress-wrapper">
+          <div class="progress-bar-outer">
+            <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+            <div class="progress-shimmer"></div>
+          </div>
+          <div class="progress-meta">
+            <span id="progressText">0 / 0 sent</span>
+            <span id="progressPct">0%</span>
+          </div>
+        </div>
+        <div class="speed-meter">
+          <span>SPEED:</span><span id="speedMeter" class="cyan">0 emails/sec</span>
+          <span style="margin-left:20px">ETA:</span><span id="etaMeter" class="cyan">--:--</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- RIGHT PANEL -->
+    <aside class="panel panel-right">
+
+      <!-- Live log -->
+      <div class="hud-section log-section">
+        <div class="section-title"><span class="bracket">[</span>LIVE TRANSMISSION LOG<span class="bracket">]</span></div>
+        <div class="log-window" id="logWindow"></div>
+      </div>
+
+      <!-- Dot matrix (like image bottom-left) -->
+      <div class="hud-section">
+        <div class="section-title"><span class="bracket">[</span>NODE MAP<span class="bracket">]</span></div>
+        <div class="dot-matrix" id="dotMatrix"></div>
+        <div class="dot-legend">
+          <span class="dot-legend-item sent">■ SENT</span>
+          <span class="dot-legend-item fail">■ FAIL</span>
+          <span class="dot-legend-item queue">■ QUEUE</span>
+        </div>
+      </div>
+
+      <!-- API Info -->
+      <div class="hud-section">
+        <div class="section-title"><span class="bracket">[</span>PYTHON API ENDPOINT<span class="bracket">]</span></div>
+        <div class="api-info">
+          <div class="api-row">
+            <span class="api-label">HOST:</span>
+            <input type="text" id="apiHost" value="http://localhost:5000" class="api-input"/>
+          </div>
+          <div class="api-row">
+            <span class="api-label">MODE:</span>
+            <select id="apiMode" class="api-select">
+              <option value="frontend">FRONTEND ONLY (JS)</option>
+              <option value="backend">PYTHON BACKEND</option>
+            </select>
+          </div>
+          <div class="api-note">
+            Run <code>python server.py</code> to enable backend mode with full SMTP relay support.
+          </div>
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="hud-footer">
+    <div class="footer-left">
+      <span class="code-tag">8.97430791</span>
+      <div class="footer-dots" id="footerDots"></div>
+    </div>
+    <div class="footer-center">
+      NEXUS_MAILER © 2025 — ALL SYSTEMS NOMINAL — <span class="cyan" id="sessionId"></span>
+    </div>
+    <div class="footer-right">
+      <span id="totalSent">TOTAL SENT: 0</span>
+      <span id="uptime">UPTIME: 00:00:00</span>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
